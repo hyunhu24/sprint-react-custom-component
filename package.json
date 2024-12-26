@@ -12,7 +12,7 @@
     "react-scripts": "^5.0.1",
     "resq": "^1.10.0",
     "sass": "^1.32.12",
-    "styled-components": "^5.2.3"
+    "styled-components": "^6.1.13"
   },
   "jest": {
     "testMatch": [
