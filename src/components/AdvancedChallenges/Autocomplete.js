@@ -69,6 +69,11 @@ export const DropDownContainer = styled.ul`
 
   > li {
     padding: 0 1rem;
+    cursor: pointer;
+    /* display: none;
+    .selected{
+      display: flex;
+    } */
   }
 `;
 
@@ -92,6 +97,13 @@ export const Autocomplete = () => {
 
   // TODO : input과 dropdown 상태 관리를 위한 handler가 있어야 합니다.
   const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+    setHasText(true);
+    setOptions(deselectedOptions.filter(option =>
+          option.includes(event.target.value.toLowerCase()) ||
+          option.includes(event.target.value.toUpperCase())
+      )
+    );
     /**
      * handleInputChange 함수는
      * - input값 변경 시 발생되는 change 이벤트 핸들러입니다.
@@ -109,6 +121,10 @@ export const Autocomplete = () => {
   };
 
   const handleDropDownClick = (clickedOption) => {
+    setInputValue(clickedOption)
+    setHasText(false);
+
+
     /**
      * handleDropDownClick 함수는
      * - autocomplete 추천 항목을 클릭할 때 발생되는 click 이벤트 핸들러입니다.
@@ -123,6 +139,7 @@ export const Autocomplete = () => {
   };
 
   const handleDeleteButtonClick = () => {
+    setInputValue("");
     /**
      * handleDeleteButtonClick 함수는
      * - input의 오른쪽에 있는 X버튼 클릭 시 발생되는 click 이벤트 핸들러입니다.
@@ -141,12 +158,12 @@ export const Autocomplete = () => {
   return (
     <div className='autocomplete-wrapper'>
       <InputContainer>
-        {/* TODO : input 엘리먼트를 작성하고 input값(value)을 state와 연결합니다. handleInputChange 함수와 input값 변경 시 호출될 수 있게 연결합니다. */}
-        {/* TODO : 아래 div.delete-button 버튼을 누르면 input 값이 삭제되어 dropdown이 없어지는 handler 함수를 작성합니다. */}
-        <div className='delete-button'>&times;</div>
+        <input type='text' value={inputValue} onChange={handleInputChange}/>
+        <div className='delete-button' onClick={handleDeleteButtonClick}>&times;</div>
       </InputContainer>
       {/* TODO : input 값이 없으면 dropdown이 보이지 않아야 합니다. 조건부 렌더링을 이용해서 구현하세요. */}
-      <DropDown />
+      {hasText && <DropDown options={options} handleComboBox={handleDropDownClick}/>}
+     
     </div>
   );
 };
@@ -155,6 +172,14 @@ export const DropDown = ({ options, handleComboBox }) => {
   return (
     <DropDownContainer>
       {/* TODO : input 값에 맞는 autocomplete 선택 옵션이 보여지는 역할을 합니다. */}
+      {options.map((value, index) => (
+        <li
+          key={index}
+          onClick={() => handleComboBox(value)}
+        >
+          {value}
+        </li>
+      ))}
     </DropDownContainer>
   );
 };
